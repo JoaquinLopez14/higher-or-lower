@@ -1,6 +1,6 @@
 import { HashRouter as Router, Routes, Route } from "react-router-dom"
-import Menu from "./components/Menu"
-import Game from "./components/Game"
+import Menu from "./pages/Menu"
+import Game from "./pages/Game"
 
 function App() {
 
