@@ -1,11 +1,16 @@
+import { HashRouter as Router, Routes, Route } from "react-router-dom"
+import Menu from "./components/Menu"
+import Game from "./components/Game"
+
 function App() {
 
   return (
-    <>
-      <div className="w-screen h-screen bg-amber-200">
-        <h1>hola</h1>
-      </div>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Menu />} />
+        <Route path="/game" element={<Game />} />
+      </Routes>
+    </Router>
   )
 }
 
