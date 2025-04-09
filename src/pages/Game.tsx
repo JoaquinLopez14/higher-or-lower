@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { GameItem } from "../types/GameItem";
-import { mockItems } from "../utils/mockItems";
+import { GameItem } from "../../Backend/src/types/GameItem";
+import { mockItems } from "../../Backend/src/data/mockItems";
 import ItemCard from "../components/ItemCard";
 
 // Function to filter items based on game type
