@@ -1,31 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { GameItem } from "../../Backend/src/types/GameItem";
-import { mockItems } from "../../Backend/src/data/mockItems";
+import { getItems } from "../services/api";
 import ItemCard from "../components/ItemCard";
 
+export type Item = GameItem;
+
 // Function to filter items based on game type
-const getGameItems = (gameType: string | null): GameItem[] => {
-    return mockItems.filter((item) => item.type === gameType);
+const getGameItems = (items: GameItem[], gameType: string | null): GameItem[] => {
+    return items.filter((item) => item.type === gameType);
 };
+
 
 const getItemValue = (item: GameItem): number => {
     return item.type === "car" ? item.price : item.boxOffice
 }
 
 const Game = () => {
+
+
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const gameType = searchParams.get("type");
 
-    // Get filtered items based on the selected game type
-    const filteredItems = getGameItems(gameType);
+    const [items, setItems] = useState<GameItem[]>([])
+    const [loading, setLoading] = useState(true)
 
-    const [remainingItems, setRemainingItems] = useState<GameItem[]>(filteredItems.slice(2))
-    const [currentItems, setCurrentItems] = useState<GameItem[]>(filteredItems.slice(0, 2))
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const data = await getItems();
+                const filtered = getGameItems(data, gameType);
 
+                if (filtered.length >= 2) {
+                    setCurrentItems(filtered.slice(0, 2));
+                    setRemainingItems(filtered.slice(2));
+                }
+
+                setItems(data);
+            } catch (error) {
+                console.error("Error al obtener los ítems:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchItems();
+    }, [gameType]);
+
+
+    const [remainingItems, setRemainingItems] = useState<GameItem[]>([])
+    const [currentItems, setCurrentItems] = useState<GameItem[]>([])
+
+
+    if (loading) {
+        return <h1 className="text-center mt-10">Cargando...</h1>;
+    }
     // Early validation: If gameType is invalid or there aren't at least two items, show an error message
-    if (!gameType || filteredItems.length < 2) {
+    if (!gameType || !currentItems || currentItems.length < 2) {
         return (
             <h1 className="text-center mt-10 text-red-500">
                 There's not enough elements to play

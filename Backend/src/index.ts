@@ -1,9 +1,11 @@
 import express from "express";
+import cors from "cors";
 import { mockItems } from "./data/mockItems";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());  // <-- añadís esta línea
 app.use(express.json());
 
 // Ruta de prueba (podés dejarla o eliminarla si ya no la querés)
